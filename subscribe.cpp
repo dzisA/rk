@@ -8,10 +8,10 @@ public:
 
 class TemperatureSensor {
     std::vector<Observer*> obs;
-    float current;
+    float current {0.0};
 public:
     void attach(Observer* o) { obs.push_back(o); }
-    void detach(Observer* o) { /* удаление */ }
+    void detach(Observer* o) { obs.erase(std::remove(obs.begin(),obs.end(),o),obs.end()); }
 
     void setTemperature(float t) {
         current = t;
@@ -44,11 +44,19 @@ public:
         sensor.attach(&alexa);
     }
     void changeTemp(float t) { sensor.setTemperature(t); }
+    void detachAlexa() {sensor.detach(&alexa);}
+    void detachAlice() {sensor.detach(&alice);}
+    void attachAlexa() {sensor.attach(&alexa); }
+    void attachAlca() {sensor.attach(&alice); }
 };
 
 int main()
 {
     SmartHome home;
     home.changeTemp(22.5);
+    home.detachAlexa();
+    home.changeTemp(26.6);
+    home.attachAlexa();
+    home.changeTemp(43.3);
     return 0;
 }
